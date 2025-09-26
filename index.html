@@ -514,33 +514,25 @@
             if (welcomeMessage) {
                 welcomeMessage.style.display = 'none';
             }
-
-            const API_KEY = 'AIzaSyDLzRJ1EKYu35zD7f3hQ6noeLP0Z8OHWxU'; 
             
             try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`, {
+                // Panggil endpoint API serverless yang baru
+                const response = await fetch('/api/chat', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
-                        contents: [
-                            {
-                                role: 'user',
-                                parts: [{ text: `Jawablah selalu dalam bahasa Indonesia. ${content}` }]
-                            }
-                        ]
-                    })
+                    body: JSON.stringify({ content })
                 });
 
                 if (!response.ok) {
                     const errorData = await response.json();
-                    throw new Error(errorData.error.message || `HTTP error! status: ${response.status}`);
+                    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
                 }
 
                 const data = await response.json();
                 
-                const aiMessage = data.candidates[0].content.parts[0].text;
+                const aiMessage = data.text;
                 
                 if (aiMessage) {
                     addMessage('assistant', aiMessage);
