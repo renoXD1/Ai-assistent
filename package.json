@@ -1,0 +1,12 @@
+{
+  "name": "ai-assistant-project",
+  "version": "1.0.0",
+  "description": "A simple AI chat assistant using Gemini API on Vercel.",
+  "main": "api/chat.js",
+  "scripts": {
+    "start": "vercel dev"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.1.3"
+  }
+}
