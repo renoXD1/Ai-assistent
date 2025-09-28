@@ -1,6 +1,7 @@
 {
   "name": "ai-assistant-project",
   "version": "1.0.0",
+  "type": "module",
   "description": "A simple AI chat assistant using Gemini API on Vercel.",
   "main": "api/chat.js",
   "scripts": {
