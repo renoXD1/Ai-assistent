@@ -1,535 +1,420 @@
-
-                        <!DOCTYPE html>
-                        <html lang="en">
-                        <head>
-                            <meta charset="UTF-8">
-                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <style>
-                body {
-                  background-color: white; /* Ensure the iframe has a white background */
-                }
-    
-                
-              </style>
-                        </head>
-                        <body>
-                            <!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Groq AI Chat - Free & Fast</title>
-  <meta name="description" content="Free AI chat powered by Groq. No API key needed.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <style>
-    :root {
-      --bg-gradient: linear-gradient(135deg, #111827 0%, #000000 50%, #1f2937 100%);
-      --user-bubble: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
-      --ai-bubble: #1f2937;
-      --border-color: rgba(55, 65, 81, 0.5);
-      --text-primary: #f9fafb;
-      --text-secondary: #9ca3af;
-      --accent-gradient: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
-    }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      background: var(--bg-gradient);
-      color: var(--text-primary);
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow-x: hidden;
-    }
-
-    .header {
-      border-bottom: 1px solid var(--border-color);
-      background: rgba(0, 0, 0, 0.2);
-      backdrop-filter: blur(10px);
-      padding: 1rem;
-    }
-
-    .header-content {
-      max-width: 896px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .logo-icon {
-      width: 2.5rem;
-      height: 2.5rem;
-      border-radius: 0.75rem;
-      background: var(--accent-gradient);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .logo-text h1 {
-      font-size: 1.25rem;
-      font-weight: 700;
-    }
-
-    .logo-text p {
-      font-size: 0.75rem;
-      color: var(--text-secondary);
-    }
-
-    .status {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.75rem;
-    }
-
-    .status-dot {
-      width: 0.5rem;
-      height: 0.5rem;
-      border-radius: 50%;
-      background: #10b981;
-      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
-    .chat-container {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      max-width: 896px;
-      margin: 0 auto;
-      width: 100%;
-      padding: 1rem;
-    }
-
-    .messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 1rem 0;
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    .message {
-      display: flex;
-      gap: 0.75rem;
-      animation: fadeIn 0.3s ease-out;
-    }
-
-    .message.ai { justify-content: flex-start; }
-    .message.user { justify-content: flex-end; }
-
-    .avatar {
-      width: 2rem;
-      height: 2rem;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .ai .avatar { background: var(--accent-gradient); }
-    .user .avatar { background: var(--user-bubble); }
-
-    .bubble {
-      max-width: 85%;
-      padding: 0.875rem 1rem;
-      border-radius: 1rem;
-      font-size: 0.9375rem;
-      line-height: 1.5;
-      position: relative;
-    }
-
-    .ai .bubble {
-      background: var(--ai-bubble);
-      border: 1px solid var(--border-color);
-      color: var(--text-primary);
-    }
-
-    .user .bubble {
-      background: var(--user-bubble);
-      color: white;
-    }
-
-    .message-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 0.5rem;
-      font-size: 0.75rem;
-    }
-
-    .time { color: var(--text-secondary); }
-
-    .copy-btn {
-      background: none;
-      border: none;
-      color: var(--text-secondary);
-      cursor: pointer;
-      padding: 0.25rem;
-      border-radius: 0.25rem;
-      transition: color 0.2s;
-    }
-
-    .copy-btn:hover { color: var(--text-primary); }
-
-    .input-area {
-      padding: 1rem 0;
-      border-top: 1px solid var(--border-color);
-      background: rgba(0, 0, 0, 0.2);
-      backdrop-filter: blur(10px);
-    }
-
-    .input-form {
-      display: flex;
-      gap: 0.75rem;
-    }
-
-    .message-input {
-      flex: 1;
-      padding: 0.875rem 1rem;
-      padding-right: 3rem;
-      background: rgba(31, 41, 55, 0.5);
-      border: 1px solid var(--border-color);
-      border-radius: 1rem;
-      color: var(--text-primary);
-      font-size: 0.9375rem;
-      outline: none;
-    }
-
-    .message-input:focus {
-      border-color: #8b5cf6;
-      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
-    }
-
-    .message-input::placeholder { color: var(--text-secondary); }
-
-    .send-btn {
-      position: absolute;
-      right: 0.75rem;
-      top: 50%;
-      transform: translateY(-50%);
-      background: var(--accent-gradient);
-      border: none;
-      width: 2.25rem;
-      height: 2.25rem;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .send-btn:hover { transform: translateY(-50%) scale(1.05); box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3); }
-    .send-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: translateY(-50%) scale(1); }
-
-    .typing-indicator {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.875rem 1rem;
-      color: var(--text-secondary);
-      font-style: italic;
-      font-size: 0.875rem;
-    }
-
-    .typing-dots {
-      display: flex;
-      gap: 0.25rem;
-    }
-
-    .typing-dot {
-      width: 0.5rem;
-      height: 0.5rem;
-      background: #8b5cf6;
-      border-radius: 50%;
-      animation: typing 1.4s infinite ease-in-out;
-    }
-
-    .typing-dot:nth-child(1) { animation-delay: 0s; }
-    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-
-    @keyframes typing {
-      0%, 60%, 100% { transform: translateY(0); }
-      30% { transform: translateY(-0.25rem); }
-    }
-
-    .suggestions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      justify-content: center;
-      margin-bottom: 1rem;
-    }
-
-    .suggestion-btn {
-      background: rgba(31, 41, 55, 0.5);
-      border: 1px solid var(--border-color);
-      color: var(--text-secondary);
-      padding: 0.5rem 0.75rem;
-      border-radius: 999px;
-      font-size: 0.8125rem;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .suggestion-btn:hover {
-      background: rgba(139, 92, 246, 0.2);
-      color: #c4b5fd;
-      border-color: #8b5cf6;
-    }
-
-    .footer-note {
-      text-align: center;
-      margin-top: 1rem;
-      font-size: 0.75rem;
-      color: var(--text-secondary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @media (max-width: 640px) {
-      .header-content { flex-direction: column; gap: 0.75rem; align-items: flex-start; }
-      .message .bubble { max-width: 90%; }
-      .logo-text h1 { font-size: 1.125rem; }
-      .status { margin-top: 0.25rem; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepSeek AI Chat</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header */
+        header {
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0,0,0,0.3);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            color: #10b981;
+            font-size: 24px;
+        }
+        
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .new-chat {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.3s;
+        }
+        
+        .new-chat:hover {
+            background: #0da271;
+        }
+        
+        /* Chat Container */
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .message {
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            line-height: 1.5;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .user-message {
+            background: #3b82f6;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .ai-message {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+        
+        .ai-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #10b981;
+        }
+        
+        /* Input Area */
+        .input-area {
+            padding: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.2);
+        }
+        
+        .input-wrapper {
+            display: flex;
+            gap: 10px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        textarea {
+            flex: 1;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: white;
+            font-size: 16px;
+            resize: none;
+            min-height: 56px;
+            max-height: 200px;
+            outline: none;
+            transition: border 0.3s;
+        }
+        
+        textarea:focus {
+            border-color: #10b981;
+        }
+        
+        .send-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+            align-self: flex-end;
+        }
+        
+        .send-btn:hover {
+            background: #0da271;
+        }
+        
+        .send-btn:disabled {
+            background: #4b5563;
+            cursor: not-allowed;
+        }
+        
+        /* Loading Animation */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 18px;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+        
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+        
+        .dot:nth-child(2) { animation-delay: 0.2s; }
+        .dot:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes bounce {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .container { max-width: 100%; }
+            .message { max-width: 90%; }
+            .input-wrapper { flex-direction: column; }
+            .send-btn { width: 100%; height: 48px; margin-top: 10px; }
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
 </head>
 <body>
-  <header class="header">
-    <div class="header-content">
-      <div class="logo">
-        <div class="logo-icon" id="logo-icon"></div>
-        <div class="logo-text">
-          <h1>Groq AI Chat</h1>
-          <p>Powered by Llama 3.1</p>
-        </div>
-      </div>
-      <div class="status">
-        <div class="status-dot"></div>
-        <span>Free for everyone</span>
-      </div>
-    </div>
-  </header>
-
-  <div class="chat-container">
-    <div class="messages" id="messages">
-      <div class="message ai" data-id="1">
-        <div class="avatar"><i data-lucide="bot" style="width:12px;height:12px;color:white"></i></div>
-        <div class="bubble">
-          Hello! I'm your AI assistant powered by Groq's lightning-fast LLM inference. How can I help you today? 🚀
-          <div class="message-meta">
-            <span class="time">Just now</span>
-            <button class="copy-btn" data-id="1" data-content="Hello! I'm your AI assistant powered by Groq's lightning-fast LLM inference. How can I help you today? 🚀">
-              <i data-lucide="copy"></i>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <i class="fas fa-robot"></i>
+                <h1>DeepSeek AI</h1>
+            </div>
+            <button class="new-chat" onclick="newChat()">
+                <i class="fas fa-plus"></i> Chat Baru
             </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="suggestions" id="suggestions">
-      <button class="suggestion-btn" data-text="Help me debug this JavaScript code">Debug JS code</button>
-      <button class="suggestion-btn" data-text="Explain quantum computing simply">Explain quantum computing</button>
-      <button class="suggestion-btn" data-text="Write a poem about artificial intelligence">Poem about AI</button>
-    </div>
-
-    <div class="input-area">
-      <form class="input-form" id="chat-form">
-        <div style="position: relative; flex: 1;">
-          <input 
-            type="text" 
-            class="message-input" 
-            id="message-input" 
-            placeholder="Ask me anything... (Powered by Groq AI)" 
-            autocomplete="off"
-          >
-          <button type="submit" class="send-btn" id="send-btn">
-            <i data-lucide="send"></i>
-          </button>
-        </div>
-      </form>
-      <div class="footer-note">
-        <i data-lucide="zap"></i>
-        <span>Free AI chat • Powered by Groq • Your messages are not stored</span>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    lucide.createIcons();
-
-    const messagesEl = document.getElementById('messages');
-    const messageInput = document.getElementById('message-input');
-    const chatForm = document.getElementById('chat-form');
-    const suggestions = document.getElementById('suggestions');
-
-    let messageCount = 1;
-
-    function formatTime(date) {
-      return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-    }
-
-    function createMessageElement(id, content, role, timestamp) {
-      const messageDiv = document.createElement('div');
-      messageDiv.className = `message ${role}`;
-      messageDiv.dataset.id = id;
-      
-      const avatar = document.createElement('div');
-      avatar.className = 'avatar';
-      avatar.innerHTML = role === 'ai' 
-        ? '<i data-lucide="bot" style="width:12px;height:12px;color:white"></i>'
-        : '<i data-lucide="user" style="width:12px;height:12px;color:white"></i>';
-      
-      const bubble = document.createElement('div');
-      bubble.className = 'bubble';
-      bubble.textContent = content;
-      
-      const meta = document.createElement('div');
-      meta.className = 'message-meta';
-      meta.innerHTML = `
-        <span class="time">${formatTime(timestamp)}</span>
-        <button class="copy-btn" data-id="${id}" data-content="${content.replace(/"/g, '&quot;')}">
-          <i data-lucide="copy"></i>
-        </button>
-      `;
-      
-      bubble.appendChild(meta);
-      messageDiv.appendChild(role === 'user' ? bubble : avatar);
-      messageDiv.appendChild(role === 'user' ? avatar : bubble);
-      
-      return messageDiv;
-    }
-
-    function scrollToBottom() {
-      messagesEl.scrollTop = messagesEl.scrollHeight;
-    }
-
-    function showTypingIndicator() {
-      const typingDiv = document.createElement('div');
-      typingDiv.className = 'message ai';
-      typingDiv.id = 'typing-indicator';
-      typingDiv.innerHTML = `
-        <div class="typing-indicator">
-          <div class="typing-dots">
-            <div class="typing-dot"></div>
-            <div class="typing-dot"></div>
-            <div class="typing-dot"></div>
-          </div>
-          <span>AI is thinking...</span>
-        </div>
-      `;
-      messagesEl.appendChild(typingDiv);
-      scrollToBottom();
-    }
-
-    function hideTypingIndicator() {
-      const el = document.getElementById('typing-indicator');
-      if (el) el.remove();
-    }
-
-    async function addMessage(content, role) {
-      const id = ++messageCount;
-      const el = createMessageElement(id, content, role, new Date());
-      messagesEl.appendChild(el);
-      lucide.createIcons();
-      scrollToBottom();
-      return id;
-    }
-
-    async function copyToClipboard(text, messageId) {
-      await navigator.clipboard.writeText(text);
-      const btn = document.querySelector(`.copy-btn[data-id="${messageId}"]`);
-      const icon = btn.querySelector('i');
-      icon.setAttribute('data-lucide', 'check');
-      lucide.createIcons();
-      setTimeout(() => {
-        icon.setAttribute('data-lucide', 'copy');
-        lucide.createIcons();
-      }, 2000);
-    }
-
-    chatForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const message = messageInput.value.trim();
-      if (!message) return;
-
-      await addMessage(message, 'user');
-      messageInput.value = '';
-      const sendBtn = document.getElementById('send-btn');
-      sendBtn.disabled = true;
-
-      showTypingIndicator();
-
-      try {
-        // 🔑 INI AMAN: Kirim ke backend-mu sendiri, bukan ke Groq langsung
-        const response = await fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message })
-        });
-
-        const data = await response.json();
-        hideTypingIndicator();
+        </header>
         
-        if (response.ok) {
-          await addMessage(data.response, 'ai');
-        } else {
-          await addMessage('Sorry, I encountered an error. Please try again.', 'ai');
+        <!-- Chat Messages -->
+        <div class="chat-container" id="chatContainer">
+            <!-- Default welcome message -->
+            <div class="message ai-message">
+                <div class="ai-header">
+                    <i class="fas fa-robot"></i>
+                    <span>DeepSeek AI</span>
+                </div>
+                <p>Halo! Saya DeepSeek AI. Ada yang bisa saya bantu hari ini?</p>
+            </div>
+        </div>
+        
+        <!-- Input Area -->
+        <div class="input-area">
+            <div class="input-wrapper">
+                <textarea 
+                    id="messageInput" 
+                    placeholder="Ketik pesan Anda di sini... (Shift+Enter untuk baris baru)"
+                    rows="2"
+                    onkeydown="handleKeyDown(event)"
+                ></textarea>
+                <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State variables
+        let currentChat = [];
+        let isLoading = false;
+        
+        // Initialize with welcome message
+        currentChat.push({
+            role: 'assistant',
+            content: 'Halo! Saya DeepSeek AI. Ada yang bisa saya bantu hari ini?'
+        });
+        
+        // DOM Elements
+        const chatContainer = document.getElementById('chatContainer');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        
+        // Auto-resize textarea
+        messageInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+        
+        // Handle Enter key
+        function handleKeyDown(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
         }
-      } catch (error) {
-        hideTypingIndicator();
-        await addMessage('Failed to connect to the server. Please try again.', 'ai');
-      }
-
-      sendBtn.disabled = false;
-      messageInput.focus();
-    });
-
-    suggestions.addEventListener('click', (e) => {
-      if (e.target.classList.contains('suggestion-btn')) {
-        messageInput.value = e.target.dataset.text;
+        
+        // Send message function
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message || isLoading) return;
+            
+            // Add user message to chat
+            addMessageToChat('user', message);
+            messageInput.value = '';
+            messageInput.style.height = 'auto';
+            
+            // Show typing indicator
+            showTypingIndicator();
+            isLoading = true;
+            sendBtn.disabled = true;
+            
+            try {
+                // Call AI API (YOUR SCRAPER)
+                const aiResponse = await callAIScraper(message);
+                
+                // Remove typing indicator
+                removeTypingIndicator();
+                
+                // Add AI response to chat
+                addMessageToChat('assistant', aiResponse);
+                
+            } catch (error) {
+                removeTypingIndicator();
+                addMessageToChat('assistant', `Error: ${error.message}`);
+            }
+            
+            isLoading = false;
+            sendBtn.disabled = false;
+            messageInput.focus();
+        }
+        
+        // YOUR SCRAPER FUNCTION - DIMODIFIKASI UNTUK BROWSER
+        async function callAIScraper(message) {
+            // Opsi 1: Coba endpoint Anda langsung
+            try {
+                const response = await axios.post('https://wewordle.org/gptapi/v1/web/turbo', {
+                    messages: [{ content: message, role: "user" }]
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'User-Agent': 'Mozilla/5.0',
+                        'Origin': 'https://deepseek.me',
+                        'Referer': 'https://deepseek.me/'
+                    }
+                });
+                
+                return response.data?.message?.content || 'No response from AI';
+                
+            } catch (error) {
+                // Opsi 2: Fallback ke local proxy
+                try {
+                    const fallback = await axios.post('/api/chat', { message });
+                    return fallback.data.response || 'Fallback response';
+                    
+                } catch (fallbackError) {
+                    // Opsi 3: Mock response jika semua gagal
+                    return `DeepSeek AI: Saya menerima pesan "${message}". Ini adalah simulasi karena endpoint scraper mungkin tidak tersedia.`;
+                }
+            }
+        }
+        
+        // Add message to chat UI
+        function addMessageToChat(role, content) {
+            currentChat.push({ role, content });
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role === 'user' ? 'user-message' : 'ai-message'}`;
+            
+            if (role === 'assistant') {
+                messageDiv.innerHTML = `
+                    <div class="ai-header">
+                        <i class="fas fa-robot"></i>
+                        <span>DeepSeek AI</span>
+                    </div>
+                    <p>${content}</p>
+                `;
+            } else {
+                messageDiv.innerHTML = `<p>${content}</p>`;
+            }
+            
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+        
+        // Show typing indicator
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'typing-indicator';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = `
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <span>DeepSeek AI sedang mengetik...</span>
+            `;
+            chatContainer.appendChild(typingDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+        
+        // Remove typing indicator
+        function removeTypingIndicator() {
+            const typing = document.getElementById('typingIndicator');
+            if (typing) typing.remove();
+        }
+        
+        // New chat function
+        function newChat() {
+            if (confirm('Mulai chat baru?')) {
+                chatContainer.innerHTML = `
+                    <div class="message ai-message">
+                        <div class="ai-header">
+                            <i class="fas fa-robot"></i>
+                            <span>DeepSeek AI</span>
+                        </div>
+                        <p>Halo! Saya DeepSeek AI. Ada yang bisa saya bantu hari ini?</p>
+                    </div>
+                `;
+                currentChat = [{
+                    role: 'assistant',
+                    content: 'Halo! Saya DeepSeek AI. Ada yang bisa saya bantu hari ini?'
+                }];
+            }
+        }
+        
+        // Initialize
         messageInput.focus();
-      }
-    });
-
-    messagesEl.addEventListener('click', (e) => {
-      if (e.target.closest('.copy-btn')) {
-        const btn = e.target.closest('.copy-btn');
-        copyToClipboard(btn.dataset.content, btn.dataset.id);
-      }
-    });
-
-    document.querySelector('.time').textContent = formatTime(new Date());
-    scrollToBottom();
-    messageInput.focus();
-  </script>
+    </script>
 </body>
 </html>
-<script>
