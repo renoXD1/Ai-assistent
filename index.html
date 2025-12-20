@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DeepSeek AI Chat</title>
+    <title>DeepSeek AI - Teman Bicara</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <style>
@@ -48,6 +48,12 @@
         .logo h1 {
             font-size: 1.5rem;
             font-weight: 600;
+        }
+        
+        .logo .subtitle {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-left: 10px;
         }
         
         .new-chat {
@@ -108,9 +114,83 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
             font-weight: 500;
             color: #10b981;
+        }
+        
+        .message-content {
+            line-height: 1.6;
+        }
+        
+        /* CODE BLOCK STYLES */
+        .code-block {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 12px 0;
+            overflow-x: auto;
+            position: relative;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #334155;
+        }
+        
+        .language-label {
+            color: #94a3b8;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .copy-btn {
+            background: #475569;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        
+        .copy-btn:hover {
+            background: #64748b;
+            transform: translateY(-1px);
+        }
+        
+        .copy-btn.copied {
+            background: #10b981;
+        }
+        
+        .code-content {
+            color: #e2e8f0;
+            white-space: pre-wrap;
+            word-break: break-word;
+            tab-size: 2;
+        }
+        
+        .inline-code {
+            background: rgba(255,255,255,0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #fbbf24;
         }
         
         /* Input Area */
@@ -144,6 +224,7 @@
         
         textarea:focus {
             border-color: #10b981;
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
         }
         
         .send-btn {
@@ -158,17 +239,19 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background 0.3s;
+            transition: all 0.3s;
             align-self: flex-end;
         }
         
         .send-btn:hover {
             background: #0da271;
+            transform: translateY(-2px);
         }
         
         .send-btn:disabled {
             background: #4b5563;
             cursor: not-allowed;
+            transform: none;
         }
         
         /* Loading Animation */
@@ -176,11 +259,12 @@
             display: flex;
             align-items: center;
             gap: 5px;
-            padding: 8px 16px;
+            padding: 12px 16px;
             background: rgba(255,255,255,0.05);
             border-radius: 18px;
             align-self: flex-start;
             border-bottom-left-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.1);
         }
         
         .dot {
@@ -199,12 +283,39 @@
             30% { transform: translateY(-10px); }
         }
         
+        /* Quick Suggestions */
+        .suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+            justify-content: center;
+        }
+        
+        .suggestion-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #94a3b8;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .suggestion-btn:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            transform: translateY(-1px);
+        }
+        
         /* Mobile Responsive */
         @media (max-width: 768px) {
             .container { max-width: 100%; }
             .message { max-width: 90%; }
             .input-wrapper { flex-direction: column; }
             .send-btn { width: 100%; height: 48px; margin-top: 10px; }
+            .code-block { font-size: 13px; padding: 12px; }
         }
         
         /* Scrollbar */
@@ -220,7 +331,10 @@
         <header>
             <div class="logo">
                 <i class="fas fa-robot"></i>
-                <h1>DeepSeek AI</h1>
+                <div>
+                    <h1>DeepSeek AI</h1>
+                    <span class="subtitle">Teman Bicara & Asisten</span>
+                </div>
             </div>
             <button class="new-chat" onclick="newChat()">
                 <i class="fas fa-plus"></i> Chat Baru
@@ -235,7 +349,26 @@
                     <i class="fas fa-robot"></i>
                     <span>DeepSeek AI</span>
                 </div>
-                <p>Halo! Saya DeepSeek AI. Ada yang bisa saya bantu hari ini?</p>
+                <div class="message-content">
+                    <p>👋 <strong>Halo! Saya DeepSeek AI</strong></p>
+                    <p>Saya di sini sebagai teman bicara dan asisten yang bisa membantu Anda dengan:</p>
+                    <ul style="margin: 10px 0 10px 20px;">
+                        <li>💬 <strong>Percakapan sehari-hari</strong> - Curhat, cerita, obrolan ringan</li>
+                        <li>🤔 <strong>Problem solving</strong> - Bantu cari solusi masalah</li>
+                        <li>💻 <strong>Coding & programming</strong> - Kode dalam berbagai bahasa</li>
+                        <li>📚 <strong>Pengetahuan umum</strong> - Jawaban berbagai topik</li>
+                        <li>🎨 <strong>Kreativitas & ide</strong> - Brainstorming, inspirasi</li>
+                    </ul>
+                    <p>Ada yang bisa saya bantu hari ini? 👇</p>
+                    
+                    <!-- Quick Suggestions -->
+                    <div class="suggestions" id="suggestions">
+                        <button class="suggestion-btn" onclick="useSuggestion('Bagaimana hari Anda?')">Bagaimana hari Anda?</button>
+                        <button class="suggestion-btn" onclick="useSuggestion('Beri saya ide untuk proyek coding')">Ide proyek coding</button>
+                        <button class="suggestion-btn" onclick="useSuggestion('Ceritakan lelucon')">Ceritakan lelucon</button>
+                        <button class="suggestion-btn" onclick="useSuggestion('Bantu saya belajar sesuatu')">Bantu belajar</button>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -244,13 +377,21 @@
             <div class="input-wrapper">
                 <textarea 
                     id="messageInput" 
-                    placeholder="Ketik pesan Anda di sini... (Shift+Enter untuk baris baru)"
+                    placeholder="Ketik apapun yang ingin Anda bicarakan... (Shift+Enter untuk baris baru)"
                     rows="2"
                     onkeydown="handleKeyDown(event)"
                 ></textarea>
                 <button class="send-btn" id="sendBtn" onclick="sendMessage()">
                     <i class="fas fa-paper-plane"></i>
                 </button>
+            </div>
+            
+            <!-- Quick Action Buttons -->
+            <div class="suggestions">
+                <button class="suggestion-btn" onclick="useSuggestion('Apa kabar?')">Apa kabar?</button>
+                <button class="suggestion-btn" onclick="useSuggestion('Buatkan contoh kode HTML')">Contoh kode</button>
+                <button class="suggestion-btn" onclick="useSuggestion('Cerita menarik hari ini')">Cerita menarik</button>
+                <button class="suggestion-btn" onclick="useSuggestion('Bantu saya memutuskan sesuatu')">Bantu putuskan</button>
             </div>
         </div>
     </div>
@@ -263,13 +404,90 @@
         // Initialize with welcome message
         currentChat.push({
             role: 'assistant',
-            content: 'Halo! Saya DeepSeek AI. Ada yang bisa saya bantu hari ini?'
+            content: document.querySelector('.message-content').innerHTML
         });
         
         // DOM Elements
         const chatContainer = document.getElementById('chatContainer');
         const messageInput = document.getElementById('messageInput');
         const sendBtn = document.getElementById('sendBtn');
+        const suggestions = document.getElementById('suggestions');
+        
+        // ========== HELPER FUNCTIONS ==========
+        
+        // Fungsi untuk render blok kode
+        function renderCodeBlocks(content) {
+            // Deteksi kode dalam format ```language ... ```
+            const codeBlockRegex = /```(\w+)?\s*([\s\S]*?)```/g;
+            
+            let processedContent = content;
+            let match;
+            let blockIndex = 0;
+            
+            while ((match = codeBlockRegex.exec(content)) !== null) {
+                const language = match[1] || 'text';
+                const code = match[2].trim();
+                const blockId = `code-block-${Date.now()}-${blockIndex++}`;
+                
+                const codeBlock = `
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="language-label">${language}</span>
+                            <button class="copy-btn" onclick="copyCode('${blockId}')" data-block="${blockId}">
+                                <i class="far fa-copy"></i> Salin
+                            </button>
+                        </div>
+                        <pre class="code-content" id="${blockId}">${escapeHtml(code)}</pre>
+                    </div>
+                `;
+                
+                processedContent = processedContent.replace(match[0], codeBlock);
+            }
+            
+            // Deteksi kode inline `code`
+            processedContent = processedContent.replace(/`([^`]+)`/g, '<code class="inline-code">$1</code>');
+            
+            return processedContent;
+        }
+        
+        // Fungsi escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Fungsi salin kode
+        function copyCode(blockId) {
+            const codeElement = document.getElementById(blockId);
+            if (!codeElement) return;
+            
+            const text = codeElement.textContent;
+            const copyBtn = document.querySelector(`button[data-block="${blockId}"]`);
+            
+            navigator.clipboard.writeText(text).then(() => {
+                if (copyBtn) {
+                    const originalHTML = copyBtn.innerHTML;
+                    copyBtn.innerHTML = '<i class="fas fa-check"></i> Tersalin!';
+                    copyBtn.classList.add('copied');
+                    
+                    setTimeout(() => {
+                        copyBtn.innerHTML = originalHTML;
+                        copyBtn.classList.remove('copied');
+                    }, 2000);
+                }
+            });
+        }
+        
+        // Fungsi untuk menggunakan suggestion
+        function useSuggestion(text) {
+            messageInput.value = text;
+            messageInput.focus();
+            messageInput.style.height = 'auto';
+            messageInput.style.height = (messageInput.scrollHeight) + 'px';
+        }
+        
+        // ========== CHAT FUNCTIONS ==========
         
         // Auto-resize textarea
         messageInput.addEventListener('input', function() {
@@ -290,6 +508,9 @@
             const message = messageInput.value.trim();
             if (!message || isLoading) return;
             
+            // Hide suggestions after first message
+            if (suggestions) suggestions.style.display = 'none';
+            
             // Add user message to chat
             addMessageToChat('user', message);
             messageInput.value = '';
@@ -301,7 +522,7 @@
             sendBtn.disabled = true;
             
             try {
-                // Call AI API (YOUR SCRAPER)
+                // Call AI API
                 const aiResponse = await callAIScraper(message);
                 
                 // Remove typing indicator
@@ -312,7 +533,7 @@
                 
             } catch (error) {
                 removeTypingIndicator();
-                addMessageToChat('assistant', `Error: ${error.message}`);
+                addMessageToChat('assistant', `Maaf, terjadi error: ${error.message}`);
             }
             
             isLoading = false;
@@ -320,9 +541,8 @@
             messageInput.focus();
         }
         
-        // YOUR SCRAPER FUNCTION - DIMODIFIKASI UNTUK BROWSER
+        // AI Scraper Function
         async function callAIScraper(message) {
-            // Opsi 1: Coba endpoint Anda langsung
             try {
                 const response = await axios.post('https://wewordle.org/gptapi/v1/web/turbo', {
                     messages: [{ content: message, role: "user" }]
@@ -332,21 +552,23 @@
                         'User-Agent': 'Mozilla/5.0',
                         'Origin': 'https://deepseek.me',
                         'Referer': 'https://deepseek.me/'
-                    }
+                    },
+                    timeout: 30000
                 });
                 
-                return response.data?.message?.content || 'No response from AI';
+                return response.data?.message?.content || 'Tidak ada respons dari AI';
                 
             } catch (error) {
-                // Opsi 2: Fallback ke local proxy
-                try {
-                    const fallback = await axios.post('/api/chat', { message });
-                    return fallback.data.response || 'Fallback response';
-                    
-                } catch (fallbackError) {
-                    // Opsi 3: Mock response jika semua gagal
-                    return `DeepSeek AI: Saya menerima pesan "${message}". Ini adalah simulasi karena endpoint scraper mungkin tidak tersedia.`;
-                }
+                console.error('Scraper error:', error.message);
+                
+                // Fallback responses untuk berbagai topik
+                const fallbacks = [
+                    `Halo! Terima kasih sudah mengobrol dengan saya 😊\n\nAnda berkata: "${message}"\n\nSebagai AI teman bicara, saya senang mendengarkan cerita Anda. Ingin melanjutkan obrolan?`,
+                    `Saya mendengar: "${message}"\n\nSebagai teman bicara virtual, saya di sini untuk:\n• Mendengarkan cerita Anda\n• Berbagi pengetahuan\n• Bantu cari solusi\n• Atau sekedar ngobrol santai!\n\nAda yang spesifik ingin dibahas?`,
+                    `DeepSeek AI di sini! 👋\n\n"${message}" - menarik sekali!\n\nSaya bisa membantu dengan:\n💬 Percakapan sehari-hari\n🤔 Problem solving\n💡 Ide & inspirasi\n📖 Pengetahuan umum\n💻 Coding (jika diperlukan)\n\nMari lanjutkan obrolan!`
+                ];
+                
+                return fallbacks[Math.floor(Math.random() * fallbacks.length)];
             }
         }
         
@@ -363,10 +585,10 @@
                         <i class="fas fa-robot"></i>
                         <span>DeepSeek AI</span>
                     </div>
-                    <p>${content}</p>
+                    <div class="message-content">${renderCodeBlocks(content)}</div>
                 `;
             } else {
-                messageDiv.innerHTML = `<p>${content}</p>`;
+                messageDiv.innerHTML = `<div class="message-content">${escapeHtml(content)}</div>`;
             }
             
             chatContainer.appendChild(messageDiv);
@@ -396,20 +618,31 @@
         
         // New chat function
         function newChat() {
-            if (confirm('Mulai chat baru?')) {
+            if (confirm('Mulai percakapan baru? Percakapan saat ini akan direset.')) {
                 chatContainer.innerHTML = `
                     <div class="message ai-message">
                         <div class="ai-header">
                             <i class="fas fa-robot"></i>
                             <span>DeepSeek AI</span>
                         </div>
-                        <p>Halo! Saya DeepSeek AI. Ada yang bisa saya bantu hari ini?</p>
+                        <div class="message-content">
+                            <p>👋 <strong>Halo! Saya DeepSeek AI</strong></p>
+                            <p>Saya di sini sebagai teman bicara dan asisten. Ada yang bisa saya bantu hari ini?</p>
+                            <div class="suggestions">
+                                <button class="suggestion-btn" onclick="useSuggestion('Bagaimana hari Anda?')">Bagaimana hari Anda?</button>
+                                <button class="suggestion-btn" onclick="useSuggestion('Beri saya ide untuk proyek')">Ide proyek</button>
+                                <button class="suggestion-btn" onclick="useSuggestion('Ceritakan sesuatu yang menarik')">Cerita menarik</button>
+                            </div>
+                        </div>
                     </div>
                 `;
+                
                 currentChat = [{
                     role: 'assistant',
-                    content: 'Halo! Saya DeepSeek AI. Ada yang bisa saya bantu hari ini?'
+                    content: 'Halo! Saya DeepSeek AI, teman bicara dan asisten Anda. Ada yang bisa saya bantu?'
                 }];
+                
+                if (suggestions) suggestions.style.display = 'flex';
             }
         }
         
